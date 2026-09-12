@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#3b82f6">
+<title>门店开业工作台</title>
+<!-- 本工作台通过 WorkBuddy 资料库能力（library skill）部署 -->
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Roboto, sans-serif;
+    background: #f4f5f7;
+    color: #1f2937;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  input, textarea { font-family: inherit; font-size: 16px; }
+  /* iOS 阻止输入框聚焦缩放：字号 ≥16px 已经处理 */
+
+  :root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #dbeafe;
+    --success: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #1f2937;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f4f5f7;
+    --card: #ffffff;
+    --radius: 12px;
+    --tap: 44px;
+  }
+
+  /* ===== App Shell ===== */
+  .app {
+    max-width: 720px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg);
+  }
+
+  /* ===== Top Bar ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topbar h1 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .topbar .sync {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sync-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+  }
+
+  /* ===== Date Header ===== */
+  .date-header {
+    padding: 18px 16px 12px;
+  }
+  .date-header .today {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .date-header .big {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    padding: 0 16px 12px;
+  }
+  .section-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0.5px;
+    margin: 12px 4px 8px;
+    font-weight: 500;
+  }
+
+  /* ===== Empty State ===== */
+  .empty {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+  .empty .empty-illus {
+    width: 64px; height: 64px;
+    margin: 0 auto 12px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+  }
+  .empty .title {
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 8px 0 4px;
+  }
+  .empty .desc {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== Store Card ===== */
+  .store-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .store-head {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .store-head .name {
+    font-size: 17px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+  .day-badge.upcoming {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  .day-badge.long {
+    background: #fef3c7;
+    color: #b45309;
+  }
+  .store-body {
+    padding: 6px 0;
+  }
+  .task-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    min-height: var(--tap);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background 0.15s;
+  }
+  .task-item:active { background: #f9fafb; }
+  .task-item.done .text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+  .checkbox {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .task-item.done .checkbox {
+    background: var(--success);
+    border-color: var(--success);
+  }
+  .task-item .text {
+    flex: 1;
+    font-size: 15px;
+    word-break: break-all;
+  }
+  .task-no-tasks {
+    padding: 18px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .task-footer {
+    padding: 10px 16px 12px;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: #f3f4f6;
+    border-radius: 2px;
+    margin-left: 12px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--success);
+    transition: width 0.3s;
+  }
+  .store-actions {
+    display: flex;
+    border-top: 1px solid #f3f4f6;
+  }
+  .store-actions button {
+    flex: 1;
+    padding: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: none;
+    border-right: 1px solid #f3f4f6;
+    min-height: var(--tap);
+  }
+  .store-actions button:last-child { border-right: none; }
+  .store-actions button:active { background: #f9fafb; }
+  .store-actions .danger { color: var(--danger); }
+
+  /* ===== Buttons ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: opacity 0.15s, transform 0.15s;
+    min-height: var(--tap);
+  }
+  .btn:active { opacity: 0.8; transform: scale(0.98); }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:disabled { background: #9ca3af; }
+  .btn-ghost {
+    background: #f3f4f6;
+    color: var(--text);
+  }
+  .btn-block { width: 100%; }
+  .fab {
+    position: fixed;
+    right: 20px;
+    bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(59,130,246,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+  }
+
+  /* ===== Bottom Tab Bar ===== */
+  .tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 40;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab {
+    flex: 1;
+    padding: 8px 0 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--text-muted);
+    font-size: 11px;
+    min-height: 56px;
+    justify-content: center;
+  }
+  .tab.active { color: var(--primary); }
+  .tab svg { width: 22px; height: 22px; }
+
+  /* ===== Modal / Sheet ===== */
+  .modal-mask {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-mask.show { display: flex; }
+  .sheet {
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px 16px 24px;
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .sheet h2 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .sheet .sub {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .form-row { margin-bottom: 14px; }
+  .form-row label {
+    display: block;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .form-row input,
+  .form-row textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    background: #fff;
+    outline: none;
+    transition: border 0.15s, box-shadow 0.15s;
+  }
+  .form-row textarea {
+    min-height: 160px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  .form-row input:focus,
+  .form-row textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+  .sheet-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .sheet-actions .btn { flex: 1; }
+
+  /* ===== Preview / 规则预览 ===== */
+  .preview {
+    margin-top: 8px;
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .preview-day {
+    margin-bottom: 10px;
+  }
+  .preview-day:last-child { margin-bottom: 0; }
+  .preview-day .label {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--primary-dark);
+    background: var(--primary-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .preview-task {
+    font-size: 14px;
+    color: var(--text);
+    padding: 2px 0 2px 4px;
+  }
+  .preview-task::before {
+    content: "· ";
+    color: var(--text-muted);
+  }
+  .preview-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 16px 0;
+  }
+  .parse-errors {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #991b1b;
+    font-size: 13px;
+  }
+  .parse-errors .err-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* ===== Toast ===== */
+  .toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.82);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    z-index: 200;
+    pointer-events: none;
+    animation: toastIn 0.2s ease;
+    max-width: 80vw;
+    text-align: center;
+    white-space: pre-line;
+    line-height: 1.5;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translate(-50%,-40%); } to { opacity: 1; transform: translate(-50%,-50%); } }
+
+  /* PC 适配：宽度 >=720 时缩小边距，但仍是单列 */
+  @media (min-width: 720px) {
+    .app { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+    .date-header { padding-top: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 顶部条 -->
+  <div class="topbar">
+    <h1 id="page-title">门店开业工作台</h1>
+    <div class="sync" title="本地存储已启用">
+      <span class="sync-dot"></span>
+      <span>本地存储</span>
+    </div>
+  </div>
+
+  <!-- 三个页面：工作台 / 店铺 / 任务规则 -->
+  <main id="main">
+    <!-- 由 JS 渲染 -->
+  </main>
+
+</div>
+
+<!-- 底部导航 -->
+<nav class="tabbar">
+  <button class="tab active" data-page="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>工作台</span>
+  </button>
+  <button class="tab" data-page="stores">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>店铺</span>
+  </button>
+  <button class="tab" data-page="rules">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+    <span>任务规则</span>
+  </button>
+</nav>
+
+<!-- 弹层容器 -->
+<div class="modal-mask" id="modal">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+/* =========================================================
+   门店开业工作台
+   - 数据层 / 业务逻辑 / UI 严格分层（DAG，无渲染函数互相调用）
+   - 数据通过 localStorage 持久化（key 前缀 wb_storeop_）
+   - 单文件、零外部依赖
+   ========================================================= */
+
+/* ============ 1. 数据层 Storage ============ */
+const Storage = (function() {
+  const PREFIX = 'wb_storeop_';
+  const KEY_STORES = PREFIX + 'stores';
+  const KEY_WORKFLOW = PREFIX + 'workflow';
+  const KEY_RECORDS = PREFIX + 'records';
+
+  function load(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw == null) return fallback;
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error('localStorage 读取失败', key, e);
+      return fallback;
+    }
+  }
+  function save(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      console.error('localStorage 写入失败', key, e);
+      return false;
+    }
+  }
+
+  return {
+    getStores() { return load(KEY_STORES, []); },
+    setStores(arr) { save(KEY_STORES, arr); },
+    getWorkflow() { return load(KEY_WORKFLOW, []); },
+    setWorkflow(arr) { save(KEY_WORKFLOW, arr); },
+    getRecords() { return load(KEY_RECORDS, {}); },
+    setRecords(obj) { save(KEY_RECORDS, obj); },
+  };
+})();
+
+/* ============ 2. 业务逻辑层 Utils / 规则解析 / 日期 ============ */
+const Utils = {
+  uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); },
+
+  /** 把 Date 或 yyyy-mm-dd 字符串归一化成当天本地 00:00 的 Date */
+  parseDate(input) {
+    if (input instanceof Date) {
+      return new Date(input.getFullYear(), input.getMonth(), input.getDate());
+    }
+    if (typeof input === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(input)) {
+      const [y, m, d] = input.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+    return null;
+  },
+
+  /** Date -> 'YYYY-MM-DD' */
+  fmtDate(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  },
+
+  /** 中文长格式：2026年09月12日 周五 */
+  fmtDateCN(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const weeks = ['日','一','二','三','四','五','六'];
+    return `${y}年${m}月${day}日 周${weeks[d.getDay()]}`;
+  },
+
+  /** 距今天多少天（正数表示未来，0 表示今天） */
+  daysFromToday(targetDate) {
+    const today = Utils.parseDate(new Date());
+    const d = Math.floor((targetDate - today) / 86400000);
+    return d; // 负数=过去
+  },
+
+  /** 开业天数：今天 - 开业日期 + 1。未开业返回 null */
+  openingDayNumber(openingDateStr) {
+    const openingDate = Utils.parseDate(openingDateStr);
+    if (!openingDate) return null;
+    const today = Utils.parseDate(new Date());
+    const diffDays = Math.floor((today - openingDate) / 86400000);
+    if (diffDays < 0) return null;       // 尚未开业
+    return diffDays + 1;                  // 开业第 N 天
+  },
+
+  /** 距离开业还有几天（开业日期在未来的情况下使用） */
+  daysUntilOpening(openingDateStr) {
+    const openingDate = Utils.parseDate(openingDateStr);
+    if (!openingDate) return null;
+    const today = Utils.parseDate(new Date());
+    const diffDays = Math.floor((openingDate - today) / 86400000);
+    return diffDays; // 正数=未来
+  },
+};
+
+/**
+ * 任务规则解析器。
+ * 输入: 多行文本，每行 "第N天：任务A、任务B"
+ * 输出: { parsed: [{dayNumber, tasks: [..]}], errors: [{lineNo, lineText, message}] }
+ * 不静默忽略错误行。
+ */
+const RuleParser = {
+  parse(text) {
+    const result = { parsed: [], errors: [] };
+    if (!text || !text.trim()) return result;
+
+    const lines = text.split(/\r?\n/);
+    lines.forEach((rawLine, idx) => {
+      const lineNo = idx + 1;
+      const line = rawLine.trim();
+      if (!line) return; // 空行跳过
+
+      // 匹配 "第N天" 或 "第N天：" （冒号中英文都支持）
+      const m = line.match(/^第(\d+)天\s*[：:]\s*(.+)$/);
+      if (!m) {
+        result.errors.push({
+          lineNo,
+          lineText: line,
+          message: '格式错误，期望「第N天：任务A、任务B」',
+        });
+        return;
+      }
+      const dayNumber = parseInt(m[1], 10);
+      if (dayNumber <= 0 || !/^\d+$/.test(m[1])) {
+        result.errors.push({ lineNo, lineText: line, message: 'N 必须为正整数' });
+        return;
+      }
+      const taskPart = m[2].trim();
+      // 禁止任何英文逗号
+      if (/,/.test(taskPart)) {
+        result.errors.push({ lineNo, lineText: line, message: '检测到英文逗号「,」，请使用中文顿号「、」分隔多个任务' });
+        return;
+      }
+      const tasks = taskPart.split(/[、]/).map(s => s.trim()).filter(Boolean);
+      if (tasks.length === 0) {
+        result.errors.push({ lineNo, lineText: line, message: '冒号后面没有任务内容' });
+        return;
+      }
+      result.parsed.push({ dayNumber, tasks });
+    });
+
+    // 排序：按 dayNumber 升序
+    result.parsed.sort((a, b) => a.dayNumber - b.dayNumber);
+    return result;
+  },
+
+  /** 把规则结构反序列化为可编辑的文本 */
+  toText(workflow) {
+    if (!workflow || workflow.length === 0) return '';
+    return workflow.map(r => `第${r.dayNumber}天：${r.tasks.join('、')}`).join('\n');
+  },
+};
+
+/* ============ 3. 任务匹配 & 完成逻辑 ============ */
+const Tasks = {
+  /** 给定店铺和规则集合，获取今日任务列表 */
+  getTodayTasks(store, workflow) {
+    const day = Utils.openingDayNumber(store.openingDate);
+    if (day == null) return null; // 未开业
+    const rule = workflow.find(r => r.dayNumber === day);
+    if (!rule) return []; // 开业了但今天没任务
+    return rule.tasks.map(t => ({ taskId: t, text: t }));
+  },
+
+  /** 读取今天某店铺某任务的完成状态 */
+  isDone(records, storeId, dateStr, taskId) {
+    const k = `${storeId}__${dateStr}__${taskId}`;
+    return !!records[k];
+  },
+
+  /** 切换完成状态，返回新 records */
+  toggle(records, storeId, dateStr, taskId) {
+    const k = `${storeId}__${dateStr}__${taskId}`;
+    const next = { ...records };
+    if (next[k]) delete next[k]; else next[k] = true;
+    return next;
+  },
+
+  /** 完成进度：[completed, total] */
+  progress(records, storeId, dateStr, tasks) {
+    if (!tasks || tasks.length === 0) return [0, 0];
+    let done = 0;
+    tasks.forEach(t => { if (Tasks.isDone(records, storeId, dateStr, t.taskId)) done++; });
+    return [done, tasks.length];
+  },
+};
+
+/* ============ 4. UI 渲染层 ============
+   重要约定：渲染函数之间严禁互相调用（DAG）。
+   数据修改后，统一通过 refreshAll() 触发重渲染。
+*/
+
+const UI = {
+  $main: () => document.getElementById('main'),
+  $modal: () => document.getElementById('modal'),
+  $sheet: () => document.getElementById('sheet'),
+  $title: () => document.getElementById('page-title'),
+  $toastTimer: null,
+
+  toast(msg) {
+    const old = document.querySelector('.toast');
+    if (old) old.remove();
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    if (UI.$toastTimer) clearTimeout(UI.$toastTimer);
+    UI.$toastTimer = setTimeout(() => { el.remove(); }, 1800);
+  },
+
+  showSheet(html) {
+    UI.$sheet().innerHTML = html;
+    UI.$modal().classList.add('show');
+  },
+  closeSheet() {
+    UI.$modal().classList.remove('show');
+    UI.$sheet().innerHTML = '';
+  },
+
+  /* ---------- 图标 helpers（内联 SVG，不用 emoji） ---------- */
+  iconPlus() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'; },
+  iconCheck() { return '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>'; },
+  iconStore() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'; },
+  iconCal() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'; },
+
+  escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    })[ch]);
+  },
+
+  /* ---------- 首页：工作台 ---------- */
+  renderHome(state) {
+    UI.$title().textContent = '工作台';
+    const stores = state.stores;
+    const records = state.records;
+    const today = Utils.fmtDate(new Date());
+
+    let html = `
+      <div class="date-header">
+        <div class="today">今天</div>
+        <div class="big">${Utils.fmtDateCN(new Date())}</div>
+      </div>
+      <div class="section">
+        <div class="section-title">我的店铺</div>
+    `;
+
+    if (stores.length === 0) {
+      html += `
+        <div class="empty">
+          <div class="empty-illus">${UI.iconStore()}</div>
+          <div class="title">还没有店铺</div>
+          <div class="desc">去「店铺」页面添加你的第一个店铺</div>
+          <button class="btn btn-primary" data-action="add-store">添加第一个店铺</button>
+        </div>
+      `;
+      html += `</div>`;
+      UI.$main().innerHTML = html;
+      return;
+    }
+
+    // 排序：有未完成 > 已全部完成 > 今日无任务 > 尚未开业
+    const workflow = state.workflow;
+    const annotated = stores.map(s => {
+      const todayTasks = Tasks.getTodayTasks(s, workflow);
+      const upcoming = Utils.daysUntilOpening(s.openingDate);
+      let bucket; // 0=有未完成, 1=全部完成, 2=今日无任务, 3=尚未开业
+      let progress = [0, 0];
+      if (upcoming != null && upcoming > 0) {
+        bucket = 3;
+      } else if (todayTasks == null) {
+        bucket = 3;
+      } else if (todayTasks.length === 0) {
+        bucket = 2;
+      } else {
+        progress = Tasks.progress(records, s.id, today, todayTasks);
+        bucket = progress[0] < progress[1] ? 0 : 1;
+      }
+      return { store: s, bucket, todayTasks, progress, upcoming };
+    });
+    annotated.sort((a, b) => a.bucket - b.bucket);
+
+    annotated.forEach(a => {
+      html += UI.renderStoreCard(a.store, a.todayTasks, a.progress, a.upcoming);
+    });
+
+    html += `</div>`;
+    UI.$main().innerHTML = html;
+  },
+
+  renderStoreCard(store, todayTasks, progress, upcoming) {
+    const dayNumber = Utils.openingDayNumber(store.openingDate);
+    let headerRight = '';
+    let body = '';
+
+    if (dayNumber == null) {
+      // 尚未开业
+      const d = upcoming != null ? upcoming : 0;
+      headerRight = `<span class="day-badge upcoming">尚未开业</span>`;
+      body = `
+        <div class="task-no-tasks">距离开业还有 ${d} 天</div>
+      `;
+    } else {
+      const dayLabel = `开业第${dayNumber}天`;
+      const dayCls = dayNumber >= 10 ? 'day-badge long' : 'day-badge';
+      headerRight = `<span class="${dayCls}">${dayLabel}</span>`;
+
+      if (!todayTasks || todayTasks.length === 0) {
+        body = `<div class="task-no-tasks">今日暂无任务</div>`;
+      } else {
+        const dateStr = Utils.fmtDate(new Date());
+        const records = Storage.getRecords();
+        const items = todayTasks.map(t => {
+          const done = Tasks.isDone(records, store.id, dateStr, t.taskId);
+          return `
+            <li class="task-item ${done ? 'done' : ''}" data-action="toggle-task" data-store-id="${UI.escapeHtml(store.id)}" data-task-id="${UI.escapeHtml(t.taskId)}">
+              <div class="checkbox">${done ? UI.iconCheck() : ''}</div>
+              <div class="text">${UI.escapeHtml(t.text)}</div>
+            </li>
+          `;
+        }).join('');
+        const [done, total] = progress;
+        const pct = total > 0 ? Math.round(done / total * 100) : 0;
+        body = `
+          <ul class="task-list">${items}</ul>
+          <div class="task-footer">
+            <span>${done} / ${total} 已完成</span>
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          </div>
+        `;
+      }
+    }
+
+    return `
+      <div class="store-card" data-store-id="${UI.escapeHtml(store.id)}">
+        <div class="store-head">
+          <div class="name">${UI.escapeHtml(store.name)}</div>
+          ${headerRight}
+        </div>
+        <div class="store-body">${body}</div>
+      </div>
+    `;
+  },
+
+  /* ---------- 店铺页 ---------- */
+  renderStores(state) {
+    UI.$title().textContent = '我的店铺';
+    const stores = state.stores;
+
+    let html = `
+      <div class="section">
+        <div class="section-title">店铺列表</div>
+    `;
+
+    if (stores.length === 0) {
+      html += `
+        <div class="empty">
+          <div class="empty-illus">${UI.iconStore()}</div>
+          <div class="title">还没有店铺</div>
+          <div class="desc">点击下方按钮添加你的第一个店铺</div>
+        </div>
+      `;
+    } else {
+      // 按开业日期升序排序
+      const sorted = [...stores].sort((a, b) => {
+        const da = Utils.parseDate(a.openingDate) || new Date(0);
+        const db = Utils.parseDate(b.openingDate) || new Date(0);
+        return da - db;
+      });
+      sorted.forEach(s => {
+        const day = Utils.openingDayNumber(s.openingDate);
+        let badge;
+        if (day == null) {
+          const d = Utils.daysUntilOpening(s.openingDate);
+          badge = `<span class="day-badge upcoming">尚未开业</span>`;
+          html += `
+            <div class="store-card">
+              <div class="store-head">
+                <div class="name">${UI.escapeHtml(s.name)}</div>
+                ${badge}
+              </div>
+              <div class="task-no-tasks">开业日期：${UI.escapeHtml(s.openingDate)}（还有 ${d} 天）</div>
+              <div class="store-actions">
+                <button data-action="edit-store" data-store-id="${UI.escapeHtml(s.id)}">编辑</button>
+                <button class="danger" data-action="delete-store" data-store-id="${UI.escapeHtml(s.id)}">删除</button>
+              </div>
+            </div>
+          `;
+        } else {
+          badge = `<span class="day-badge">开业第${day}天</span>`;
+          html += `
+            <div class="store-card">
+              <div class="store-head">
+                <div class="name">${UI.escapeHtml(s.name)}</div>
+                ${badge}
+              </div>
+              <div class="task-no-tasks">开业日期：${UI.escapeHtml(s.openingDate)}</div>
+              <div class="store-actions">
+                <button data-action="edit-store" data-store-id="${UI.escapeHtml(s.id)}">编辑</button>
+                <button class="danger" data-action="delete-store" data-store-id="${UI.escapeHtml(s.id)}">删除</button>
+              </div>
+            </div>
+          `;
+        }
+      });
+    }
+
+    html += `</div>`;
+    html += `
+      <div class="section">
+        <button class="btn btn-primary btn-block" data-action="add-store">${UI.iconPlus()} 添加店铺</button>
+      </div>
+    `;
+    UI.$main().innerHTML = html;
+  },
+
+  /* ---------- 任务规则页 ---------- */
+  renderRules(state) {
+    UI.$title().textContent = '任务规则';
+    const workflow = state.workflow;
+    const text = RuleParser.toText(workflow);
+
+    let html = `
+      <div class="section">
+        <div class="section-title">每行格式：第N天：任务A、任务B</div>
+        <div class="form-row" style="margin-top:8px">
+          <textarea id="rule-text" placeholder="例如：&#10;第1天：发布朋友圈、检查朋友圈&#10;第2天：上传数据&#10;第3天：检查数据、整理客户信息&#10;第10天：上传数据">${UI.escapeHtml(text)}</textarea>
+        </div>
+        <div id="rule-parse-result"></div>
+        <button class="btn btn-primary btn-block" data-action="save-rules" style="margin-top:12px">保存任务规则</button>
+      </div>
+
+      <div class="section">
+        <div class="section-title">说明</div>
+        <ul style="font-size:13px; color:#6b7280; padding-left:20px; line-height:1.8;">
+          <li>第N天是从店铺开业日期算起的第几天（开业当天 = 第1天）</li>
+          <li>所有店铺共用本套规则</li>
+          <li>支持中文「：」或英文「:」</li>
+          <li>多个任务使用中文顿号「、」分隔，不支持英文逗号</li>
+        </ul>
+      </div>
+    `;
+    UI.$main().innerHTML = html;
+
+    // 实时解析预览（绑定在 input）
+    const ta = document.getElementById('rule-text');
+    const resultEl = document.getElementById('rule-parse-result');
+    function livePreview() {
+      const r = RuleParser.parse(ta.value);
+      resultEl.innerHTML = UI.renderParsePreview(r);
+    }
+    ta.addEventListener('input', livePreview);
+    livePreview();
+  },
+
+  renderParsePreview(r) {
+    let html = '';
+    if (r.errors && r.errors.length > 0) {
+      html += `<div class="parse-errors"><div class="err-title">检测到 ${r.errors.length} 处问题：</div>`;
+      r.errors.forEach(e => {
+        html += `<div>第 ${e.lineNo} 行：${UI.escapeHtml(e.message)}<br><span style="color:#7f1d1d; font-family:monospace; font-size:12px;">「${UI.escapeHtml(e.lineText)}」</span></div>`;
+      });
+      html += `</div>`;
+    } else if (r.parsed.length === 0) {
+      html += `<div class="preview"><div class="preview-empty">还没有规则。粘贴规则后将在此预览。</div></div>`;
+    } else {
+      html += `<div class="preview">`;
+      r.parsed.forEach(d => {
+        html += `<div class="preview-day"><div class="label">第 ${d.dayNumber} 天</div>`;
+        d.tasks.forEach(t => {
+          html += `<div class="preview-task">${UI.escapeHtml(t)}</div>`;
+        });
+        html += `</div>`;
+      });
+      html += `</div>`;
+    }
+    return html;
+  },
+
+  /* ---------- 店铺表单弹层 ---------- */
+  showStoreSheet(store) {
+    const isEdit = !!store;
+    const html = `
+      <h2>${isEdit ? '编辑店铺' : '添加店铺'}</h2>
+      <div class="sub">店铺名称和开业日期是必填项</div>
+      <form id="store-form">
+        <div class="form-row">
+          <label>店铺名称</label>
+          <input id="store-name" required value="${isEdit ? UI.escapeHtml(store.name) : ''}" placeholder="如：A店">
+        </div>
+        <div class="form-row">
+          <label>开业日期</label>
+          <input id="store-date" type="date" required value="${isEdit ? UI.escapeHtml(store.openingDate) : Utils.fmtDate(new Date())}">
+        </div>
+        <div class="sheet-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-sheet">取消</button>
+          <button type="submit" class="btn btn-primary">${isEdit ? '保存修改' : '添加店铺'}</button>
+        </div>
+      </form>
+    `;
+    UI.showSheet(html);
+
+    document.getElementById('store-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('store-name').value.trim();
+      const date = document.getElementById('store-date').value;
+      if (!name) { UI.toast('请填写店铺名称'); return; }
+      if (!date) { UI.toast('请选择开业日期'); return; }
+      // 校验日期格式
+      if (!Utils.parseDate(date)) { UI.toast('开业日期格式不正确'); return; }
+
+      const stores = Storage.getStores();
+      if (isEdit) {
+        const idx = stores.findIndex(s => s.id === store.id);
+        if (idx >= 0) {
+          stores[idx] = { ...stores[idx], name, openingDate: date };
+        }
+      } else {
+        stores.push({ id: Utils.uid(), name, openingDate: date });
+      }
+      Storage.setStores(stores);
+      UI.closeSheet();
+      UI.toast(isEdit ? '已保存修改' : '店铺已添加');
+      App.refresh();
+    });
+  },
+
+  /* ---------- 删除店铺确认弹层 ---------- */
+  showDeleteConfirm(store) {
+    const html = `
+      <h2>删除店铺</h2>
+      <div class="sub">删除后无法恢复，但已完成的任务记录会一并清除。</div>
+      <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:14px; margin:12px 0;">
+        <div style="font-weight:600; color:#991b1b; margin-bottom:4px;">${UI.escapeHtml(store.name)}</div>
+        <div style="font-size:13px; color:#7f1d1d;">开业日期：${UI.escapeHtml(store.openingDate)}</div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-ghost" data-action="close-sheet">取消</button>
+        <button class="btn btn-primary" style="background:#ef4444;" data-action="confirm-delete" data-store-id="${UI.escapeHtml(store.id)}">确认删除</button>
+      </div>
+    `;
+    UI.showSheet(html);
+  },
+};
+
+/* ============ 5. App — 顶层调度 ============
+   - 状态在这里集中持有
+   - 修改数据后调用 refreshAll() 触发统一刷新
+   - 渲染函数之间互相不调用，所有联动通过 refreshAll 调度
+*/
+const App = {
+  state: null,
+  page: 'home',
+
+  init() {
+    this.state = {
+      stores: Storage.getStores(),
+      workflow: Storage.getWorkflow(),
+      records: Storage.getRecords(),
+    };
+
+    // 绑定底部 tab
+    document.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        this.page = t.dataset.page;
+        this.refresh();
+      });
+    });
+
+    // 绑定弹层关闭（点遮罩）
+    UI.$modal().addEventListener('click', (e) => {
+      if (e.target.id === 'modal') UI.closeSheet();
+    });
+
+    // 委托：所有数据交互
+    document.body.addEventListener('click', this.handleClick.bind(this));
+    document.body.addEventListener('submit', this.handleSubmit.bind(this));
+
+    // 首次渲染
+    this.refresh();
+
+    // 跨日检测：每分钟检查一次，如果日期变化则刷新
+    this._lastDate = Utils.fmtDate(new Date());
+    setInterval(() => {
+      const cur = Utils.fmtDate(new Date());
+      if (cur !== this._lastDate) {
+        this._lastDate = cur;
+        this.refresh();
+      }
+    }, 60000);
+  },
+
+  /** 顶层统一刷新入口（DAG 终点） */
+  refresh() {
+    // 拉取最新数据
+    this.state.stores = Storage.getStores();
+    this.state.workflow = Storage.getWorkflow();
+    this.state.records = Storage.getRecords();
+
+    if (this.page === 'home') UI.renderHome(this.state);
+    else if (this.page === 'stores') UI.renderStores(this.state);
+    else if (this.page === 'rules') UI.renderRules(this.state);
+  },
+
+  handleClick(e) {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+    const action = target.dataset.action;
+    const storeId = target.dataset.storeId;
+    const taskId = target.dataset.taskId;
+
+    switch (action) {
+      case 'add-store':
+        UI.showStoreSheet(null);
+        break;
+      case 'edit-store': {
+        const store = this.state.stores.find(s => s.id === storeId);
+        if (store) UI.showStoreSheet(store);
+        break;
+      }
+      case 'delete-store': {
+        const store = this.state.stores.find(s => s.id === storeId);
+        if (store) UI.showDeleteConfirm(store);
+        break;
+      }
+      case 'confirm-delete': {
+        const stores = this.state.stores.filter(s => s.id !== storeId);
+        Storage.setStores(stores);
+        // 同时清理该店铺的任务记录
+        const records = this.state.records;
+        const prefix = `${storeId}__`;
+        const cleaned = {};
+        Object.keys(records).forEach(k => {
+          if (!k.startsWith(prefix)) cleaned[k] = records[k];
+        });
+        Storage.setRecords(cleaned);
+        UI.closeSheet();
+        UI.toast('店铺已删除');
+        this.refresh();
+        break;
+      }
+      case 'toggle-task': {
+        const today = Utils.fmtDate(new Date());
+        const newRecords = Tasks.toggle(this.state.records, storeId, today, taskId);
+        Storage.setRecords(newRecords);
+        this.refresh();
+        break;
+      }
+      case 'save-rules': {
+        const ta = document.getElementById('rule-text');
+        const result = RuleParser.parse(ta.value);
+        if (result.errors.length > 0) {
+          UI.toast(`第 ${result.errors[0].lineNo} 行格式错误：${result.errors[0].message}`);
+          return;
+        }
+        Storage.setWorkflow(result.parsed);
+        UI.toast(`已保存 ${result.parsed.length} 条规则`);
+        this.refresh();
+        break;
+      }
+      case 'close-sheet':
+        UI.closeSheet();
+        break;
+      default:
+        break;
+    }
+  },
+
+  handleSubmit(e) {
+    // 业务表单的 submit 已经在 showStoreSheet 里单独监听
+    e.preventDefault();
+  },
+};
+
+/* ============ 启动 ============ */
+document.addEventListener('DOMContentLoaded', () => {
+  App.init();
+});
+</script>
+</body>
+</html>
