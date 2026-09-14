@@ -23,7 +23,6 @@
   button { font-family: inherit; cursor: pointer; border: none; background: none; }
   input, textarea { font-family: inherit; font-size: 16px; }
   /* iOS 阻止输入框聚焦缩放：字号 ≥16px 已经处理 */
-
   :root {
     --primary: #3b82f6;
     --primary-dark: #2563eb;
@@ -39,7 +38,6 @@
     --radius: 12px;
     --tap: 44px;
   }
-
   /* ===== App Shell ===== */
   .app {
     max-width: 720px;
@@ -48,7 +46,6 @@
     padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     background: var(--bg);
   }
-
   /* ===== Top Bar ===== */
   .topbar {
     position: sticky;
@@ -80,7 +77,6 @@
     background: var(--success);
     box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
   }
-
   /* ===== Date Header ===== */
   .date-header {
     padding: 18px 16px 12px;
@@ -95,7 +91,6 @@
     font-weight: 600;
     letter-spacing: 0.5px;
   }
-
   /* ===== Section ===== */
   .section {
     padding: 0 16px 12px;
@@ -108,7 +103,6 @@
     margin: 12px 4px 8px;
     font-weight: 500;
   }
-
   /* ===== Empty State ===== */
   .empty {
     background: var(--card);
@@ -137,7 +131,6 @@
     font-size: 13px;
     margin-bottom: 16px;
   }
-
   /* ===== Store Card ===== */
   .store-card {
     background: var(--card);
@@ -265,7 +258,6 @@
   .store-actions button:last-child { border-right: none; }
   .store-actions button:active { background: #f9fafb; }
   .store-actions .danger { color: var(--danger); }
-
   /* ===== Buttons ===== */
   .btn {
     display: inline-flex;
@@ -304,7 +296,6 @@
     justify-content: center;
     z-index: 30;
   }
-
   /* ===== Bottom Tab Bar ===== */
   .tabbar {
     position: fixed;
@@ -332,7 +323,6 @@
   }
   .tab.active { color: var(--primary); }
   .tab svg { width: 22px; height: 22px; }
-
   /* ===== Modal / Sheet ===== */
   .modal-mask {
     position: fixed;
@@ -401,7 +391,6 @@
     margin-top: 16px;
   }
   .sheet-actions .btn { flex: 1; }
-
   /* ===== Preview / 规则预览 ===== */
   .preview {
     margin-top: 8px;
@@ -453,7 +442,6 @@
     font-weight: 600;
     margin-bottom: 4px;
   }
-
   /* ===== Toast ===== */
   .toast {
     position: fixed;
@@ -474,7 +462,6 @@
     line-height: 1.5;
   }
   @keyframes toastIn { from { opacity: 0; transform: translate(-50%,-40%); } to { opacity: 1; transform: translate(-50%,-50%); } }
-
   /* PC 适配：宽度 >=720 时缩小边距，但仍是单列 */
   @media (min-width: 720px) {
     .app { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
@@ -484,7 +471,6 @@
 </head>
 <body>
 <div class="app">
-
   <!-- 顶部条 -->
   <div class="topbar">
     <h1 id="page-title">门店接手工作台</h1>
@@ -493,35 +479,30 @@
       <span>本地存储</span>
     </div>
   </div>
-
   <!-- 三个页面：工作台 / 店铺 / 任务规则 -->
   <main id="main">
     <!-- 由 JS 渲染 -->
   </main>
-
 </div>
-
 <!-- 底部导航 -->
 <nav class="tabbar">
   <button class="tab active" data-page="home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
     <span>工作台</span>
   </button>
   <button class="tab" data-page="stores">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
     <span>店铺</span>
   </button>
   <button class="tab" data-page="rules">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="9" y1="13" x2="15" y2="13" /><line x1="9" y1="17" x2="15" y2="17" /></svg>
     <span>任务规则</span>
   </button>
 </nav>
-
 <!-- 弹层容器 -->
 <div class="modal-mask" id="modal">
   <div class="sheet" id="sheet"></div>
 </div>
-
 <script>
 /* =========================================================
    门店接手工作台
@@ -529,14 +510,12 @@
    - 数据通过 localStorage 持久化（key 前缀 wb_storeop_）
    - 单文件、零外部依赖
    ========================================================= */
-
 /* ============ 1. 数据层 Storage ============ */
 const Storage = (function() {
   const PREFIX = 'wb_storeop_';
   const KEY_STORES = PREFIX + 'stores';
   const KEY_WORKFLOW = PREFIX + 'workflow';
   const KEY_RECORDS = PREFIX + 'records';
-
   function load(key, fallback) {
     try {
       const raw = localStorage.getItem(key);
@@ -556,7 +535,6 @@ const Storage = (function() {
       return false;
     }
   }
-
   return {
     getStores() { return load(KEY_STORES, []).map(s => {
         // 兼容旧版本：旧数据的 openingDate 自动迁移为 takeoverDate
@@ -571,11 +549,9 @@ const Storage = (function() {
     setRecords(obj) { save(KEY_RECORDS, obj); },
   };
 })();
-
 /* ============ 2. 业务逻辑层 Utils / 规则解析 / 日期 ============ */
 const Utils = {
   uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); },
-
   /** 把 Date 或 yyyy-mm-dd 字符串归一化成当天本地 00:00 的 Date */
   parseDate(input) {
     if (input instanceof Date) {
@@ -587,7 +563,6 @@ const Utils = {
     }
     return null;
   },
-
   /** Date -> 'YYYY-MM-DD' */
   fmtDate(d) {
     const y = d.getFullYear();
@@ -595,7 +570,6 @@ const Utils = {
     const day = String(d.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
   },
-
   /** 中文长格式：2026年09月12日 周五 */
   fmtDateCN(d) {
     const y = d.getFullYear();
@@ -604,14 +578,12 @@ const Utils = {
     const weeks = ['日','一','二','三','四','五','六'];
     return `${y}年${m}月${day}日 周${weeks[d.getDay()]}`;
   },
-
   /** 距今天多少天（正数表示未来，0 表示今天） */
   daysFromToday(targetDate) {
     const today = Utils.parseDate(new Date());
     const d = Math.floor((targetDate - today) / 86400000);
     return d; // 负数=过去
   },
-
   /** 接手天数：今天 - 接手日期 + 1。未接手返回 null */
   takeoverDayNumber(takeoverDateStr) {
     const takeoverDate = Utils.parseDate(takeoverDateStr);
@@ -621,7 +593,6 @@ const Utils = {
     if (diffDays < 0) return null;       // 尚未接手
     return diffDays + 1;                  // 接手第 N 天
   },
-
   /** 距离接手还有几天（接手日期在未来的情况下使用） */
   daysUntilTakeover(takeoverDateStr) {
     const takeoverDate = Utils.parseDate(takeoverDateStr);
@@ -631,7 +602,6 @@ const Utils = {
     return diffDays; // 正数=未来
   },
 };
-
 /**
  * 任务规则解析器。
  * 输入: 多行文本，每行 "第N天：任务A、任务B"
@@ -642,13 +612,11 @@ const RuleParser = {
   parse(text) {
     const result = { parsed: [], errors: [] };
     if (!text || !text.trim()) return result;
-
     const lines = text.split(/\r?\n/);
     lines.forEach((rawLine, idx) => {
       const lineNo = idx + 1;
       const line = rawLine.trim();
       if (!line) return; // 空行跳过
-
       // 匹配 "第N天" 或 "第N天：" （冒号中英文都支持）
       const m = line.match(/^第(\d+)天\s*[：:]\s*(.+)$/);
       if (!m) {
@@ -677,19 +645,16 @@ const RuleParser = {
       }
       result.parsed.push({ dayNumber, tasks });
     });
-
     // 排序：按 dayNumber 升序
     result.parsed.sort((a, b) => a.dayNumber - b.dayNumber);
     return result;
   },
-
   /** 把规则结构反序列化为可编辑的文本 */
   toText(workflow) {
     if (!workflow || workflow.length === 0) return '';
     return workflow.map(r => `第${r.dayNumber}天：${r.tasks.join('、')}`).join('\n');
   },
 };
-
 /* ============ 3. 任务匹配 & 完成逻辑 ============ */
 const Tasks = {
   /** 给定店铺和规则集合，获取今日任务列表 */
@@ -700,13 +665,11 @@ const Tasks = {
     if (!rule) return []; // 已接手但今天没任务
     return rule.tasks.map(t => ({ taskId: t, text: t }));
   },
-
   /** 读取今天某店铺某任务的完成状态 */
   isDone(records, storeId, dateStr, taskId) {
     const k = `${storeId}__${dateStr}__${taskId}`;
     return !!records[k];
   },
-
   /** 切换完成状态，返回新 records */
   toggle(records, storeId, dateStr, taskId) {
     const k = `${storeId}__${dateStr}__${taskId}`;
@@ -714,7 +677,6 @@ const Tasks = {
     if (next[k]) delete next[k]; else next[k] = true;
     return next;
   },
-
   /** 完成进度：[completed, total] */
   progress(records, storeId, dateStr, tasks) {
     if (!tasks || tasks.length === 0) return [0, 0];
@@ -723,19 +685,16 @@ const Tasks = {
     return [done, tasks.length];
   },
 };
-
 /* ============ 4. UI 渲染层 ============
    重要约定：渲染函数之间严禁互相调用（DAG）。
    数据修改后，统一通过 refreshAll() 触发重渲染。
 */
-
 const UI = {
   $main: () => document.getElementById('main'),
   $modal: () => document.getElementById('modal'),
   $sheet: () => document.getElementById('sheet'),
   $title: () => document.getElementById('page-title'),
   $toastTimer: null,
-
   toast(msg) {
     const old = document.querySelector('.toast');
     if (old) old.remove();
@@ -746,7 +705,6 @@ const UI = {
     if (UI.$toastTimer) clearTimeout(UI.$toastTimer);
     UI.$toastTimer = setTimeout(() => { el.remove(); }, 1800);
   },
-
   showSheet(html) {
     UI.$sheet().innerHTML = html;
     UI.$modal().classList.add('show');
@@ -755,26 +713,22 @@ const UI = {
     UI.$modal().classList.remove('show');
     UI.$sheet().innerHTML = '';
   },
-
   /* ---------- 图标 helpers（内联 SVG，不用 emoji） ---------- */
-  iconPlus() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'; },
-  iconCheck() { return '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>'; },
-  iconStore() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'; },
-  iconCal() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'; },
-
+  iconPlus() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>'; },
+  iconCheck() { return '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12" /></svg>'; },
+  iconStore() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>'; },
+  iconCal() { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>'; },
   escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, ch => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     })[ch]);
   },
-
   /* ---------- 首页：工作台 ---------- */
   renderHome(state) {
     UI.$title().textContent = '工作台';
     const stores = state.stores;
     const records = state.records;
     const today = Utils.fmtDate(new Date());
-
     let html = `
       <div class="date-header">
         <div class="today">今天</div>
@@ -783,7 +737,6 @@ const UI = {
       <div class="section">
         <div class="section-title">我的店铺</div>
     `;
-
     if (stores.length === 0) {
       html += `
         <div class="empty">
@@ -797,8 +750,7 @@ const UI = {
       UI.$main().innerHTML = html;
       return;
     }
-
-    // 排序：按接手天数从低到高，尚未接手的店铺排在最后
+    // 排序：优先显示今天有未完成任务的店铺；同一优先级内按接手时间从早到晚排序
     const workflow = state.workflow;
     const annotated = stores.map(s => {
       const todayTasks = Tasks.getTodayTasks(s, workflow);
@@ -808,28 +760,30 @@ const UI = {
       if (todayTasks && todayTasks.length > 0) {
         progress = Tasks.progress(records, s.id, today, todayTasks);
       }
-      return { store: s, todayTasks, progress, upcoming, dayNumber };
+      const hasUnfinishedTasks = todayTasks && todayTasks.length > 0 && progress[0] < progress[1];
+      return { store: s, todayTasks, progress, upcoming, dayNumber, hasUnfinishedTasks };
     });
     annotated.sort((a, b) => {
+      // 第一优先级：有今天未完成任务的店铺排前面
+      if (a.hasUnfinishedTasks !== b.hasUnfinishedTasks) {
+        return a.hasUnfinishedTasks ? -1 : 1;
+      }
+      // 第二优先级：按接手时间（接手天数）从早到晚
       if (a.dayNumber == null && b.dayNumber == null) return 0;
       if (a.dayNumber == null) return 1;
       if (b.dayNumber == null) return -1;
       return a.dayNumber - b.dayNumber;
     });
-
     annotated.forEach(a => {
       html += UI.renderStoreCard(a.store, a.todayTasks, a.progress, a.upcoming);
     });
-
     html += `</div>`;
     UI.$main().innerHTML = html;
   },
-
   renderStoreCard(store, todayTasks, progress, upcoming) {
     const dayNumber = Utils.takeoverDayNumber(store.takeoverDate);
     let headerRight = '';
     let body = '';
-
     if (dayNumber == null) {
       // 尚未接手
       const d = upcoming != null ? upcoming : 0;
@@ -841,7 +795,6 @@ const UI = {
       const dayLabel = `接手第${dayNumber}天`;
       const dayCls = dayNumber >= 10 ? 'day-badge long' : 'day-badge';
       headerRight = `<span class="${dayCls}">${dayLabel}</span>`;
-
       if (!todayTasks || todayTasks.length === 0) {
         body = `<div class="task-no-tasks">今日暂无任务</div>`;
       } else {
@@ -867,7 +820,6 @@ const UI = {
         `;
       }
     }
-
     return `
       <div class="store-card" data-store-id="${UI.escapeHtml(store.id)}">
         <div class="store-head">
@@ -878,17 +830,14 @@ const UI = {
       </div>
     `;
   },
-
   /* ---------- 店铺页 ---------- */
   renderStores(state) {
     UI.$title().textContent = '我的店铺';
     const stores = state.stores;
-
     let html = `
       <div class="section">
         <div class="section-title">店铺列表</div>
     `;
-
     if (stores.length === 0) {
       html += `
         <div class="empty">
@@ -941,7 +890,6 @@ const UI = {
         }
       });
     }
-
     html += `</div>`;
     html += `
       <div class="section">
@@ -950,13 +898,11 @@ const UI = {
     `;
     UI.$main().innerHTML = html;
   },
-
   /* ---------- 任务规则页 ---------- */
   renderRules(state) {
     UI.$title().textContent = '任务规则';
     const workflow = state.workflow;
     const text = RuleParser.toText(workflow);
-
     let html = `
       <div class="section">
         <div class="section-title">每行格式：第N天：任务A、任务B</div>
@@ -966,7 +912,6 @@ const UI = {
         <div id="rule-parse-result"></div>
         <button class="btn btn-primary btn-block" data-action="save-rules" style="margin-top:12px">保存任务规则</button>
       </div>
-
       <div class="section">
         <div class="section-title">说明</div>
         <ul style="font-size:13px; color:#6b7280; padding-left:20px; line-height:1.8;">
@@ -978,7 +923,6 @@ const UI = {
       </div>
     `;
     UI.$main().innerHTML = html;
-
     // 实时解析预览（绑定在 input）
     const ta = document.getElementById('rule-text');
     const resultEl = document.getElementById('rule-parse-result');
@@ -989,7 +933,6 @@ const UI = {
     ta.addEventListener('input', livePreview);
     livePreview();
   },
-
   renderParsePreview(r) {
     let html = '';
     if (r.errors && r.errors.length > 0) {
@@ -1013,7 +956,6 @@ const UI = {
     }
     return html;
   },
-
   /* ---------- 店铺表单弹层 ---------- */
   showStoreSheet(store) {
     const isEdit = !!store;
@@ -1040,14 +982,12 @@ const UI = {
       </form>
     `;
     UI.showSheet(html);
-
     if (!isEdit) {
       document.getElementById('bulk-store-btn').addEventListener('click', () => {
         UI.closeSheet();
         UI.showBulkStoreSheet();
       });
     }
-
     document.getElementById('store-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('store-name').value.trim();
@@ -1056,7 +996,6 @@ const UI = {
       if (!date) { UI.toast('请选择接手日期'); return; }
       // 校验日期格式
       if (!Utils.parseDate(date)) { UI.toast('接手日期格式不正确'); return; }
-
       const stores = Storage.getStores();
       if (isEdit) {
         const idx = stores.findIndex(s => s.id === store.id);
@@ -1073,7 +1012,6 @@ const UI = {
       App.refresh();
     });
   },
-
   /* ---------- 批量添加店铺弹层 ---------- */
   showBulkStoreSheet() {
     const html = `
@@ -1081,7 +1019,6 @@ const UI = {
       <div class="sub">每个店铺占两行，支持以下两种格式；开业时间和接手时间都会作为接手日期使用。</div>
       <div style="margin:12px 0; padding:10px 12px; background:#f6f7f9; border-radius:10px; font-size:13px; line-height:1.8; white-space:pre-line;">店铺名称：A店
 开业时间：2026-09-01
-
 店铺名称：B店
 接手时间：2026-09-03</div>
       <form id="bulk-store-form">
@@ -1089,7 +1026,6 @@ const UI = {
           <label>批量内容</label>
           <textarea id="bulk-store-input" rows="10" required placeholder="店铺名称：A店
 开业时间：2026-09-01
-
 店铺名称：B店
 接手时间：2026-09-03"></textarea>
         </div>
@@ -1100,27 +1036,22 @@ const UI = {
       </form>
     `;
     UI.showSheet(html);
-
     document.getElementById('bulk-store-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const input = document.getElementById('bulk-store-input').value.trim();
       if (!input) { UI.toast('请填写批量店铺内容'); return; }
-
       const lines = input.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
       const stores = [];
       const errors = [];
-
       for (let i = 0; i < lines.length; i += 2) {
         const nameLine = lines[i] || '';
         const dateLine = lines[i + 1] || '';
         const nameMatch = nameLine.match(/^店铺名称[：:]\s*(.+)$/);
         const dateMatch = dateLine.match(/^(?:开业时间|接手时间)[：:]\s*(\d{4}-\d{2}-\d{2})$/);
-
         if (!nameMatch || !dateMatch) {
           errors.push(`第 ${Math.floor(i / 2) + 1} 个店铺格式不正确`);
           continue;
         }
-
         const name = nameMatch[1].trim();
         const date = dateMatch[1];
         if (!name) {
@@ -1133,20 +1064,17 @@ const UI = {
         }
         stores.push({ id: Utils.uid(), name, takeoverDate: date });
       }
-
       if (errors.length) {
         UI.toast(errors[0]);
         return;
       }
       if (!stores.length) { UI.toast('没有识别到有效店铺'); return; }
-
       Storage.setStores(Storage.getStores().concat(stores));
       UI.closeSheet();
       UI.toast(`已添加 ${stores.length} 家店铺`);
       App.refresh();
     });
   },
-
   /* ---------- 删除店铺确认弹层 ---------- */
   showDeleteConfirm(store) {
     const html = `
@@ -1164,7 +1092,6 @@ const UI = {
     UI.showSheet(html);
   },
 };
-
 /* ============ 5. App — 顶层调度 ============
    - 状态在这里集中持有
    - 修改数据后调用 refreshAll() 触发统一刷新
@@ -1173,14 +1100,12 @@ const UI = {
 const App = {
   state: null,
   page: 'home',
-
   init() {
     this.state = {
       stores: Storage.getStores(),
       workflow: Storage.getWorkflow(),
       records: Storage.getRecords(),
     };
-
     // 绑定底部 tab
     document.querySelectorAll('.tab').forEach(t => {
       t.addEventListener('click', () => {
@@ -1190,19 +1115,15 @@ const App = {
         this.refresh();
       });
     });
-
     // 绑定弹层关闭（点遮罩）
     UI.$modal().addEventListener('click', (e) => {
       if (e.target.id === 'modal') UI.closeSheet();
     });
-
     // 委托：所有数据交互
     document.body.addEventListener('click', this.handleClick.bind(this));
     document.body.addEventListener('submit', this.handleSubmit.bind(this));
-
     // 首次渲染
     this.refresh();
-
     // 跨日检测：每分钟检查一次，如果日期变化则刷新
     this._lastDate = Utils.fmtDate(new Date());
     setInterval(() => {
@@ -1213,26 +1134,22 @@ const App = {
       }
     }, 60000);
   },
-
   /** 顶层统一刷新入口（DAG 终点） */
   refresh() {
     // 拉取最新数据
     this.state.stores = Storage.getStores();
     this.state.workflow = Storage.getWorkflow();
     this.state.records = Storage.getRecords();
-
     if (this.page === 'home') UI.renderHome(this.state);
     else if (this.page === 'stores') UI.renderStores(this.state);
     else if (this.page === 'rules') UI.renderRules(this.state);
   },
-
   handleClick(e) {
     const target = e.target.closest('[data-action]');
     if (!target) return;
     const action = target.dataset.action;
     const storeId = target.dataset.storeId;
     const taskId = target.dataset.taskId;
-
     switch (action) {
       case 'add-store':
         UI.showStoreSheet(null);
@@ -1289,13 +1206,11 @@ const App = {
         break;
     }
   },
-
   handleSubmit(e) {
     // 业务表单的 submit 已经在 showStoreSheet 里单独监听
     e.preventDefault();
   },
 };
-
 /* ============ 启动 ============ */
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
